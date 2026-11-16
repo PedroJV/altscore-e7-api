@@ -52,6 +52,6 @@ def phase_change_diagram(pressure: float = Query(..., ge=P_MIN, le=P_CRIT)):
     v_liquido = V_LIQUIDO_MIN + fraccion * (V_CRIT - V_LIQUIDO_MIN)
     v_vapor = V_VAPOR_MIN + fraccion * (V_CRIT - V_VAPOR_MIN)
     return {
-        "specific_volume_liquid": v_liquido,
-        "specific_volume_vapor": v_vapor,
+        "specific_volume_liquid": round(v_liquido, 8),
+        "specific_volume_vapor": round(v_vapor, 8),
     }
