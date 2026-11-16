@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.responses import HTMLResponse, Response
 
 app = FastAPI()
 
+# ---------- E7 ----------
 CODIGOS = {
     "navigation": "NAV-01",
     "communications": "COM-02",
@@ -36,3 +37,21 @@ def repair_bay():
 @app.post("/teapot")
 def teapot():
     return Response(status_code=418)
+
+
+# ---------- E9 ----------
+P_MIN, P_CRIT = 0.05, 10.0
+V_CRIT = 0.0035
+V_LIQUIDO_MIN = 0.00105
+V_VAPOR_MIN = 30.0
+
+
+@app.get("/phase-change-diagram")
+def phase_change_diagram(pressure: float = Query(..., ge=P_MIN, le=P_CRIT)):
+    fraccion = (pressure - P_MIN) / (P_CRIT - P_MIN)
+    v_liquido = V_LIQUIDO_MIN + fraccion * (V_CRIT - V_LIQUIDO_MIN)
+    v_vapor = V_VAPOR_MIN + fraccion * (V_CRIT - V_VAPOR_MIN)
+    return {
+        "specific_volume_liquid": v_liquido,
+        "specific_volume_vapor": v_vapor,
+    }
